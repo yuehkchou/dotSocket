@@ -48,13 +48,25 @@ io.on('connection', function(socket) {
   });
   // on message
   socket.on('chat message', function(msg) {
-    io.emit('chat message', {msg: msg, nick: socket.nickname});
-    console.log('message: ' + msg)
+    var text = msg.trim();
+    if(text[0] === '@') {
+      var target = text.substring(1, text.indexOf(' '))
+      var message = text.substring(text.indexOf(' '), text.length)
+      socket.emit('private message', { target: target, msg: message})
+    } else {
+      io.emit('chat message', {msg: msg, nick: socket.nickname});
+      console.log('message: ' + msg)
+    }
+  })
+
+  // on private message
+  socket.on('private message', function(from, msg) {
+    socket.emit('private message', { msg: msg, from: '@' + from})
+    console.log('')
   })
   // refresh guest list
   var clients = io.sockets.adapter.rooms['room'].sockets;
   console.log('clients', clients)
-
 });
 
 http.listen(3000, function(){
