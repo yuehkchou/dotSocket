@@ -55,7 +55,7 @@
         })
       });
       socket.on('private message', function(msg) {
-        $('#messages').append($('<li>').append('<b>' + msg.from + ': ' + '</b>' + msg.msg + '<br/>'));
+        $('#messages').append($('<li>').append('<b>' + msg.nick + ': ' + '</b>' + msg.msg + '<br/>'));
       })
     });
     </script>

@@ -10,6 +10,7 @@ http.listen(3000, function(){
   console.log('listen on *: 3000')
 })
 var users = [];
+var targets = {};
 io.on('connection', function(socket) {
   // socket.broadcast.emit('connected');
   socket.join('room'); // joined the room name 'room'
@@ -22,18 +23,20 @@ io.on('connection', function(socket) {
     } else {
       // cb(true);
       socket.nickname = username;
+      targets[socket.nickname] = socket.id
       users.push(socket.nickname);
       io.sockets.emit('usernames', users)
       updateUsers();
     }
   })
   // set nick name
-  socket.on('nickname', function(nickname) {
-    socket.nickname = nickname
-    users.push(socket.nickname);
-    updateUsers()
-    console.log(users)
-  })
+  // socket.on('nickname', function(nickname) {
+  //   socket.nickname = nickname
+  //
+  //   users.push(socket.nickname);
+  //   updateUsers()
+  //   console.log(users)
+  // })
   // helper function
   function updateUsers() {
     io.sockets.emit('usernames', users)
@@ -43,6 +46,7 @@ io.on('connection', function(socket) {
     if(!socket.nickname) return
     users.splice(users.indexOf(socket.nickname), 1);
     io.emit('disconnect' , 'user disconnect');
+    targets.remove(socket.nickname);
     updateUsers();
     console.log('user disconnected');
   });
@@ -50,9 +54,15 @@ io.on('connection', function(socket) {
   socket.on('chat message', function(msg) {
     var text = msg.trim();
     if(text[0] === '@') {
-      var target = text.substring(1, text.indexOf(' '))
+      var name = text.substring(1, text.indexOf(' '))
       var message = text.substring(text.indexOf(' '), text.length)
-      socket.emit('private message', { target: target, msg: message})
+      console.log('to :', name, 'info: ', message)
+      if(name in targets){
+        console.log('whisper')
+        io.to(targets[name]).emit('chat message', {
+          msg: '(' + socket.nickname + '): ' + message, nick: socket.nickname
+        })
+      }
     } else {
       io.emit('chat message', {msg: msg, nick: socket.nickname});
       console.log('message: ' + msg)
@@ -61,7 +71,6 @@ io.on('connection', function(socket) {
 
   // on private message
   socket.on('private message', function(from, msg) {
-    socket.emit('private message', { msg: msg, from: '@' + from})
     console.log('')
   })
   // refresh guest list
