@@ -9,38 +9,52 @@ app.get('/', function(req, res) {
 http.listen(3000, function(){
   console.log('listen on *: 3000')
 })
-
+var users = [];
 io.on('connection', function(socket) {
   // socket.broadcast.emit('connected');
-  var users = [];
-  socket.on('new user', function( message, callback) {
-    if(nicknames.indexOf(message)!= -1) {
-      callback(false)
-    } else {
-      callback(true)
-      socket.nickname = message;
-      users.push(socket.nickname);
-      io.sockets.emit('usernames', users)
-      updateNicknames();
-    }
-  })
+  socket.join('room'); // joined the room name 'room'
   socket.emit('user join', 'You are connected!');
   socket.broadcast.emit('user join', 'Another client has just connected!');
-  console.log('a user connected');
-    // io.emit('join', 'user connects')
+  // on user join
+  socket.on('new user', function(username) {
+    if(users.indexOf(username) != -1) {
+      // cb(false);
+    } else {
+      // cb(true);
+      socket.nickname = username;
+      users.push(socket.nickname);
+      io.sockets.emit('usernames', users)
+      updateUsers();
+    }
+  })
   // set nick name
   socket.on('nickname', function(nickname) {
     socket.nickname = nickname
     users.push(socket.nickname);
+    updateUsers()
+    console.log(users)
   })
+  // helper function
+  function updateUsers() {
+    io.sockets.emit('usernames', users)
+  }
+  // on discconect
   socket.on('disconnect', function(){
-    io.emit('disconnect' , 'user disconnect')
+    if(!socket.nickname) return
+    users.splice(users.indexOf(socket.nickname), 1);
+    io.emit('disconnect' , 'user disconnect');
+    updateUsers();
     console.log('user disconnected');
   });
+  // on message
   socket.on('chat message', function(msg) {
     io.emit('chat message', {msg: msg, nick: socket.nickname});
     console.log('message: ' + msg)
   })
+  // refresh guest list
+  var clients = io.sockets.adapter.rooms['room'].sockets;
+  console.log('clients', clients)
+
 });
 
 http.listen(3000, function(){
