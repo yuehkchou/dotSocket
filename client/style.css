@@ -13,13 +13,16 @@ body {
   background: #A2A7A5;
 }
 form {
-  background: #FFF;
+  background: #594F51;
   padding: 3px;
   position: fixed;
   bottom: 0;
   width: 85%;
 }
 form input {
+  background-image: url('/css/searchicon.png');
+  background-position: 10px 10px;
+  background-repeat: no-repeat;
   border-radius: 5px;
   border: 2px solid #E2DADB;
   padding: 10px;
@@ -32,6 +35,20 @@ form button {
   border: none;
   padding: 10px;
 }
+#logo {
+  /*font-family: "Open Sans", sans-serif;*/
+  /*text-transform: uppercase;*/
+  font-size: 28px;
+  color: #DAE2DF;
+}
+.top-nav {
+  padding:15px;
+  width:100%;
+  /*font-family: 'Montserrat', sans-serif;*/
+  /*text-transform: uppercase;*/
+  background-color: #594F51;
+
+}
 .side-nav {
   height: 100%;
   right: 0;
@@ -40,6 +57,7 @@ form button {
   text-align: center;
   background: #6D696A;
   padding:20px;
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.2), 0 4px 12px 0 rgba(0, 0, 0, 0.19);
 }
 #users {
   font-size: 20px;
@@ -56,11 +74,8 @@ form button {
   width: 85%
 }
 #messages li { padding: 5px 10px; }
-#messages li:nth-child(odd) { background: #DAE2DF; }
-
+/*#messages li:nth-child(odd) { background: #DAE2DF; }*/
 #users-online {
-  /*font-family: 'Archivo Narrow', sans-serif;*/
-  /*font-family: 'Montserrat', sans-serif;*/
   font-family: 'Lobster';
   font-size:32px;
   /*text-transform: uppercase;*/

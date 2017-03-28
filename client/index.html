@@ -12,9 +12,13 @@
   </head>
   <body>
     <div>
+      <div class="top-nav">
+        <ul>
+        <url>
+        <p id="logo"><strong>Web</strong>Application</p>
+      </div>
       <div class="side-nav">
         <h1 id="users-online">Users Online</h1>
-        <!-- <hr NOSHADE> -->
         <ul id="users"></ul>
       </div>
       <ul id="messages"></ul>
@@ -22,8 +26,10 @@
     <form action="">
       <input id="m" placeholder="Message to #general" autocomplete="off" />
     </form>
+
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+    <!-- scripts -->
     <script>
     $(function() {
       var socket = io();
@@ -40,7 +46,7 @@
       // on chat message
       socket.on('chat message', function(msg) {
         console.log('test', msg)
-        $('#messages').append($('<li>').append('<b>' + msg.nick + ': ' + '</b>' + msg.msg + '<br/>'));
+        $('#messages').append($('<li>').append(`<strong>${msg.nick}</strong> <br/> ${msg.msg}<br/> `));
       })
       socket.on('user join', function(msg) {
         $('#messages').append($('<li>').text(msg));
