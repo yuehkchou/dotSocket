@@ -10,7 +10,8 @@ hr {
 body {
   font: 13px Helvetica, Arial;
   font-family: 'Open Sans', sans-serif;
-  background: #A2A7A5;
+  /*background: #A2A7A5;*/
+  background: #DAE2DF;
 }
 form {
   background: #594F51;
@@ -20,9 +21,9 @@ form {
   width: 85%;
 }
 form input {
-  background-image: url('/css/searchicon.png');
-  background-position: 10px 10px;
-  background-repeat: no-repeat;
+  /*background-image: url('/css/searchicon.png');*/
+  /*background-position: 10px 10px;*/
+  /*background-repeat: no-repeat;*/
   border-radius: 5px;
   border: 2px solid #E2DADB;
   padding: 10px;
@@ -47,7 +48,9 @@ form button {
   /*font-family: 'Montserrat', sans-serif;*/
   /*text-transform: uppercase;*/
   background-color: #594F51;
-
+}
+.pm {
+  background: #E2DADB;
 }
 .side-nav {
   height: 100%;
