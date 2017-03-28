@@ -1,4 +1,5 @@
-var app = require('express')();
+var express = require('express');
+var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
@@ -9,6 +10,8 @@ app.get('/', function(req, res) {
 http.listen(3000, function(){
   console.log('listen on *: 3000')
 })
+
+app.use(express.static(__dirname + '/client'));
 var users = [];
 var targets = {};
 io.on('connection', function(socket) {
@@ -46,7 +49,7 @@ io.on('connection', function(socket) {
     if(!socket.nickname) return
     users.splice(users.indexOf(socket.nickname), 1);
     io.emit('disconnect' , 'user disconnect');
-    targets.remove(socket.nickname);
+    delete targets[socket.nickname];
     updateUsers();
     console.log('user disconnected');
   });
@@ -60,7 +63,10 @@ io.on('connection', function(socket) {
       if(name in targets){
         console.log('whisper')
         io.to(targets[name]).emit('chat message', {
-          msg: '(' + socket.nickname + '): ' + message, nick: socket.nickname
+          msg: message, nick: `(@${socket.nickname})`
+        })
+        io.to(targets[socket.nickname]).emit('chat message', {
+          msg: message, nick: `(to @${name})`
         })
       }
     } else {
